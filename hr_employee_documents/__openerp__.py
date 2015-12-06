@@ -8,7 +8,7 @@
     'category': 'Human Resources',
     'author': 'Osama Naoura',
     'description': """
-By this module, you can sa.
+By this module, you can attach one document or more to employee in HR module.
     """,
     'website': '',
     'depends': ['hr'],
