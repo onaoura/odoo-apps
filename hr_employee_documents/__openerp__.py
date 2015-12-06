@@ -6,8 +6,9 @@
     'name': 'Employee Documents',
     'version': '1.0',
     'category': 'Human Resources',
+    'author': 'Osama Naoura',
     'description': """
-By this module, you can attach one document or more to each employee in hr module.
+By this module, you can sa.
     """,
     'website': '',
     'depends': ['hr'],
