@@ -3,40 +3,40 @@
 
 import logging
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from odoo import api, fields, models
+from odoo import tools, _
 
 _logger = logging.getLogger(__name__)
 
 
-class hr_employee(osv.osv):
+class hr_employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _inherit = "hr.employee"
 
-    def attachment_tree_view(self, cr, uid, ids, context):
-        domain = ['&', ('res_model', '=', 'hr.employee'), ('res_id', 'in', ids)]
-        res_id = ids and ids[0] or False
+    @api.multi
+    def attachment_tree_view(self):
+        self.ensure_one()
         return {
             'name': _('Attachments'),
-            'domain': domain,
+            'domain': [('res_model', '=', self._name), ('res_id', '=', self.id)],
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
-            'view_id': False,
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
-            'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
+            'help': """
+                <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
+                <p>The attached files are the ones that will be purchased and sent to the customer.</p>
+                """,
         }
 
-    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
-        res = {}
-        attachment = self.pool.get('ir.attachment')
-        for id in ids:
-            employee_attachments = attachment.search(cr, uid, [('res_model', '=', 'hr.employee'), ('res_id', '=', id)], context=context, count=True)
-            res[id] = employee_attachments or 0
-        return res
+    @api.multi
+    def _get_attached_docs(self):
+        IrAttachment = self.env['ir.attachment']
+        for employee in self:
+            employee.doc_count = IrAttachment.search_count([('res_model', '=', 'hr.employee'), ('res_id', 'in', employee.ids)])
 
-    _columns = {
-        'doc_count': fields.function(_get_attached_docs, string="Number of documents attached", type='integer')
-    }
+
+    doc_count = fields.Integer(compute='_get_attached_docs', string='# Number of documents attached')
+
