@@ -17,6 +17,8 @@ By this module, you can attach one document or more to employee in HR module.
     ],
     'demo': [],
     'test': [],
+    'license': 'AGPL-3',
+    'images': ['static/description/banner.jpg'],
     'installable': True,
     'auto_install': False,
 }
