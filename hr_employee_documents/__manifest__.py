@@ -21,4 +21,5 @@ By this module, you can attach one document or more to employee in HR module.
     'images': ['static/description/banner.jpg'],
     'installable': True,
     'auto_install': False,
+    'support': 'osama.naoura@gmail.com'
 }
